@@ -29,6 +29,9 @@ app.add_middleware(
 async def upload_file(file: UploadFile = File(...)):
     """Uploads an Excel file and stores it in MongoDB."""
     try:
+        # Ensure the temp directory exists
+        os.makedirs('./temp', exist_ok=True)
+        
         file_location = f"./temp/{file.filename}"
         
         # Save file temporarily
@@ -43,6 +46,7 @@ async def upload_file(file: UploadFile = File(...)):
 
     except Exception as e:
         raise ChatbotDAOException(f"Error uploading file: {str(e)}")
+
     
 @app.get("/data/column/{column_name}")
 async def get_column(column_name: str):
